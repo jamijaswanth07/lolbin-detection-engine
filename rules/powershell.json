@@ -1,0 +1,13 @@
+{
+    "rules": [
+        {
+            "id": "PS001",
+            "name": "PowerShell Encoded Command",
+            "description": "Detects PowerShell execution using the EncodedCommand parameter.",
+            "process": "powershell.exe",
+            "indicator": "-encodedcommand",
+            "severity": "MEDIUM",
+            "mitre_attack": "T1059.001"
+        }
+    ]
+}

@@ -1,0 +1,13 @@
+{
+    "rules": [
+        {
+            "id": "WMI001",
+            "name": "Suspicious WMI Process Execution",
+            "description": "Detects WMI command-line process creation using wmic.exe.",
+            "process": "wmic.exe",
+            "indicator": "process call create",
+            "severity": "MEDIUM",
+            "mitre_attack": "T1047"
+        }
+    ]
+}

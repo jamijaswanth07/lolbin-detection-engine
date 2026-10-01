@@ -1,0 +1,40 @@
+{
+    "rules": [
+        {
+            "id": "CMD001",
+            "name": "CMD Launching PowerShell",
+            "description": "Detects cmd.exe launching PowerShell through the command line.",
+            "process": "cmd.exe",
+            "indicator": "powershell",
+            "severity": "MEDIUM",
+            "mitre_attack": "T1059.003"
+        },
+        {
+            "id": "CMD002",
+            "name": "CMD Launching Certutil",
+            "description": "Detects cmd.exe launching certutil.",
+            "process": "cmd.exe",
+            "indicator": "certutil",
+            "severity": "MEDIUM",
+            "mitre_attack": "T1059.003"
+        },
+        {
+            "id": "CMD003",
+            "name": "CMD Launching MSHTA",
+            "description": "Detects cmd.exe launching mshta.",
+            "process": "cmd.exe",
+            "indicator": "mshta",
+            "severity": "MEDIUM",
+            "mitre_attack": "T1059.003"
+        },
+        {
+            "id": "CMD004",
+            "name": "CMD Launching Regsvr32",
+            "description": "Detects cmd.exe launching regsvr32.",
+            "process": "cmd.exe",
+            "indicator": "regsvr32",
+            "severity": "MEDIUM",
+            "mitre_attack": "T1059.003"
+        }
+    ]
+}

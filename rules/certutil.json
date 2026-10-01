@@ -1,0 +1,13 @@
+{
+    "rules": [
+        {
+            "id": "CERT001",
+            "name": "Suspicious Certutil Decode Activity",
+            "description": "Detects certutil execution using the decode operation.",
+            "process": "certutil.exe",
+            "indicator": "-decode",
+            "severity": "MEDIUM",
+            "mitre_attack": "T1140"
+        }
+    ]
+}

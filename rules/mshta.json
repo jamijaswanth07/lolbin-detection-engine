@@ -1,0 +1,13 @@
+{
+    "rules": [
+        {
+            "id": "MSHTA001",
+            "name": "Suspicious MSHTA Execution",
+            "description": "Detects execution of an HTA file through mshta.exe.",
+            "process": "mshta.exe",
+            "indicator": ".hta",
+            "severity": "MEDIUM",
+            "mitre_attack": "T1218.005"
+        }
+    ]
+}

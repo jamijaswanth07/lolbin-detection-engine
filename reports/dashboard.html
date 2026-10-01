@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+<meta
+    http-equiv="refresh"
+    content="30">
+
+<title>
+    LOLBin Detection Engine | SOC Console
+</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    background:
+        radial-gradient(
+            circle at 20% 0%,
+            rgba(0, 212, 255, 0.08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 20%,
+            rgba(120, 70, 255, 0.08),
+            transparent 30%
+        ),
+        #070b12;
+
+    color: #d9e2ec;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+}
+
+body::before {
+
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,0.015) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.015) 1px,
+            transparent 1px
+        );
+
+    background-size: 40px 40px;
+
+    z-index: -1;
+}
+
+.container {
+
+    max-width: 1500px;
+
+    margin: auto;
+
+    padding: 28px;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 22px 26px;
+
+    margin-bottom: 24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(15,25,38,0.96),
+            rgba(8,14,23,0.96)
+        );
+
+    border: 1px solid #1c3548;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 0 35px rgba(0,212,255,0.06);
+}
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+}
+
+.logo {
+
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: rgba(0,212,255,0.08);
+
+    border: 1px solid #1a829b;
+
+    color: #00d9ff;
+
+    font-size: 24px;
+
+    box-shadow:
+        0 0 20px rgba(0,212,255,0.15);
+}
+
+.title {
+
+    margin: 0;
+
+    font-size: 23px;
+
+    letter-spacing: 0.5px;
+
+    color: #f2f7fb;
+}
+
+.subtitle {
+
+    margin-top: 5px;
+
+    color: #71879a;
+
+    font-size: 13px;
+}
+
+.status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color: #69f0ae;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    padding: 9px 14px;
+
+    border-radius: 20px;
+
+    background: rgba(50,220,130,0.06);
+
+    border: 1px solid rgba(50,220,130,0.2);
+}
+
+.status-dot {
+
+    width: 8px;
+
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #69f0ae;
+
+    box-shadow:
+        0 0 10px #69f0ae;
+}
+
+/* =========================================================
+   STATISTICS
+   ========================================================= */
+
+.stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 16px;
+
+    margin-bottom: 20px;
+}
+
+.card {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            #0d1621,
+            #091019
+        );
+
+    border: 1px solid #1b2c3b;
+
+    border-radius: 12px;
+
+    padding: 22px;
+
+    transition: 0.2s;
+}
+
+.card:hover {
+
+    transform: translateY(-2px);
+
+    border-color: #27506a;
+}
+
+.card::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 90px;
+
+    height: 90px;
+
+    right: -30px;
+
+    bottom: -35px;
+
+    border-radius: 50%;
+
+    background: rgba(0,212,255,0.05);
+}
+
+.card-label {
+
+    color: #71879a;
+
+    font-size: 12px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1.2px;
+}
+
+.card-value {
+
+    margin-top: 9px;
+
+    font-size: 34px;
+
+    font-weight: 700;
+
+    color: #00d9ff;
+}
+
+.card.medium-card .card-value {
+
+    color: #ffbd4a;
+}
+
+/* =========================================================
+   ANALYTICS
+   ========================================================= */
+
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1.25fr
+        1fr
+        0.8fr;
+
+    gap: 18px;
+
+    margin-bottom: 20px;
+}
+
+.panel {
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(13,22,33,0.97),
+            rgba(8,14,22,0.97)
+        );
+
+    border: 1px solid #1b2c3b;
+
+    border-radius: 12px;
+
+    padding: 22px;
+}
+
+.panel-title {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.panel-title h2 {
+
+    margin: 0;
+
+    font-size: 15px;
+
+    letter-spacing: 0.8px;
+
+    text-transform: uppercase;
+
+    color: #dce9f3;
+}
+
+.panel-tag {
+
+    font-size: 10px;
+
+    color: #5e7a8e;
+
+    letter-spacing: 1px;
+}
+
+/* =========================================================
+   DETECTION ACTIVITY
+   ========================================================= */
+
+.rule-row {
+
+    margin-bottom: 17px;
+}
+
+.rule-info {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 7px;
+}
+
+.rule-id {
+
+    color: #8eeaff;
+
+    font-family: Consolas, monospace;
+
+    font-size: 13px;
+}
+
+.rule-count {
+
+    color: #9aabba;
+
+    font-size: 12px;
+}
+
+.progress-track {
+
+    height: 5px;
+
+    background: #101c28;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+.progress-bar {
+
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #00b8d9,
+            #6d5dfc
+        );
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 0 10px rgba(0,212,255,0.25);
+}
+
+/* =========================================================
+   MITRE
+   ========================================================= */
+
+.mitre-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 10px;
+}
+
+.mitre-item {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 12px;
+
+    border-radius: 8px;
+
+    background: #0b141e;
+
+    border: 1px solid #162735;
+}
+
+.mitre-code {
+
+    color: #a8e8ff;
+
+    font-family: Consolas, monospace;
+
+    font-size: 12px;
+}
+
+.mitre-count {
+
+    color: #657e91;
+
+    font-size: 11px;
+}
+
+/* =========================================================
+   SEVERITY
+   ========================================================= */
+
+.severity-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.severity-item {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 14px;
+
+    background: #0b141e;
+
+    border: 1px solid #162735;
+
+    border-radius: 8px;
+}
+
+.severity-label {
+
+    font-family: Consolas, monospace;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+.high-text {
+    color: #ff5572;
+}
+
+.medium-text {
+    color: #ffbd4a;
+}
+
+.low-text {
+    color: #69d5ff;
+}
+
+.severity-number {
+
+    color: #9aabba;
+
+    font-family: Consolas, monospace;
+
+    font-size: 13px;
+}
+
+/* =========================================================
+   ALERT TABLE
+   ========================================================= */
+
+.alert-panel {
+
+    padding: 0;
+
+    overflow: hidden;
+}
+
+.alert-header {
+
+    padding: 22px;
+}
+
+.table-wrapper {
+
+    overflow-x: auto;
+}
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 1050px;
+}
+
+thead {
+
+    background: #0a121c;
+}
+
+th {
+
+    text-align: left;
+
+    padding: 13px 16px;
+
+    color: #637b8e;
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+
+    border-top: 1px solid #172936;
+
+    border-bottom: 1px solid #172936;
+}
+
+td {
+
+    padding: 15px 16px;
+
+    border-bottom: 1px solid #12212d;
+
+    vertical-align: top;
+
+    font-size: 12px;
+}
+
+tbody tr:hover {
+
+    background: rgba(0,212,255,0.025);
+}
+
+.time-cell {
+
+    color: #61788a;
+
+    font-family: Consolas, monospace;
+
+    white-space: nowrap;
+}
+
+.rule-badge {
+
+    display: inline-block;
+
+    padding: 5px 8px;
+
+    border-radius: 5px;
+
+    background: rgba(0,212,255,0.07);
+
+    border: 1px solid rgba(0,212,255,0.16);
+
+    color: #70dcf4;
+
+    font-family: Consolas, monospace;
+
+    font-size: 11px;
+}
+
+.alert-name {
+
+    color: #e2edf5;
+
+    font-weight: 600;
+
+    margin-bottom: 6px;
+}
+
+.command {
+
+    max-width: 390px;
+
+    color: #637d90;
+
+    font-family: Consolas, monospace;
+
+    font-size: 10px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.severity {
+
+    display: inline-block;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+}
+
+.severity.high {
+
+    color: #ff7188;
+
+    background: rgba(255,70,100,0.09);
+
+    border: 1px solid rgba(255,70,100,0.18);
+}
+
+.severity.medium {
+
+    color: #ffc65a;
+
+    background: rgba(255,180,50,0.08);
+
+    border: 1px solid rgba(255,180,50,0.18);
+}
+
+.severity.low {
+
+    color: #71d9ff;
+
+    background: rgba(50,190,255,0.08);
+
+    border: 1px solid rgba(50,190,255,0.18);
+}
+
+.severity.info {
+
+    color: #9eabb5;
+
+    background: rgba(150,160,170,0.08);
+
+    border: 1px solid rgba(150,160,170,0.15);
+}
+
+.mitre-badge {
+
+    color: #b9a8ff;
+
+    background: rgba(120,90,255,0.08);
+
+    border: 1px solid rgba(120,90,255,0.18);
+
+    padding: 5px 8px;
+
+    border-radius: 5px;
+
+    font-family: Consolas, monospace;
+
+    font-size: 10px;
+}
+
+.process {
+
+    color: #a8bdca;
+
+    font-family: Consolas, monospace;
+
+    font-size: 10px;
+
+    max-width: 260px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.user {
+
+    margin-top: 5px;
+
+    color: #536b7c;
+
+    font-size: 10px;
+}
+
+/* =========================================================
+   EMPTY STATES
+   ========================================================= */
+
+.empty {
+
+    text-align: center;
+
+    padding: 50px;
+
+    color: #526879;
+}
+
+.empty-small {
+
+    text-align: center;
+
+    padding: 30px 10px;
+
+    color: #526879;
+
+    font-size: 12px;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.footer {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #4e6576;
+
+    font-size: 10px;
+
+    padding: 18px 3px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width: 1100px) {
+
+    .dashboard-grid {
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .dashboard-grid .panel:last-child {
+
+        grid-column:
+            span 2;
+    }
+}
+
+@media(max-width: 900px) {
+
+    .stats {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .dashboard-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-grid .panel:last-child {
+
+        grid-column: auto;
+    }
+
+    .header {
+
+        align-items: flex-start;
+
+        gap: 15px;
+
+        flex-direction: column;
+    }
+}
+
+@media(max-width: 550px) {
+
+    .container {
+
+        padding: 14px;
+    }
+
+    .stats {
+
+        grid-template-columns: 1fr;
+    }
+
+    .mitre-grid {
+
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="header">
+
+        <div class="brand">
+
+            <div class="logo">
+                ◈
+            </div>
+
+            <div>
+
+                <h1 class="title">
+                    LOLBin Detection Engine
+                </h1>
+
+                <div class="subtitle">
+                    Behavioral Security Monitoring Console
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="status">
+
+            <span class="status-dot"></span>
+
+            SOC DETECTION CONSOLE
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         STATISTICS
+         ===================================================== -->
+
+    <section class="stats">
+
+        <div class="card">
+
+            <div class="card-label">
+                Detection Events
+            </div>
+
+            <div class="card-value">
+                10
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-label">
+                Rules Triggered
+            </div>
+
+            <div class="card-value">
+                5
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-label">
+                ATT&CK Techniques
+            </div>
+
+            <div class="card-value">
+                5
+            </div>
+
+        </div>
+
+
+        <div class="card medium-card">
+
+            <div class="card-label">
+                Medium Alerts
+            </div>
+
+            <div class="card-value">
+                10
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ANALYTICS
+         ===================================================== -->
+
+    <section class="dashboard-grid">
+
+
+        <!-- Detection Activity -->
+
+        <div class="panel">
+
+            <div class="panel-title">
+
+                <h2>
+                    Detection Activity
+                </h2>
+
+                <span class="panel-tag">
+                    RULE DISTRIBUTION
+                </span>
+
+            </div>
+
+
+        <div class="rule-row">
+
+            <div class="rule-info">
+                <span class="rule-id">
+                    PS001
+                </span>
+
+                <span class="rule-count">
+                    3
+                </span>
+            </div>
+
+            <div class="progress-track">
+                <div
+                    class="progress-bar"
+                    style="width: 100.0%">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="rule-row">
+
+            <div class="rule-info">
+                <span class="rule-id">
+                    CMD001
+                </span>
+
+                <span class="rule-count">
+                    3
+                </span>
+            </div>
+
+            <div class="progress-track">
+                <div
+                    class="progress-bar"
+                    style="width: 100.0%">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="rule-row">
+
+            <div class="rule-info">
+                <span class="rule-id">
+                    MSHTA001
+                </span>
+
+                <span class="rule-count">
+                    2
+                </span>
+            </div>
+
+            <div class="progress-track">
+                <div
+                    class="progress-bar"
+                    style="width: 66.7%">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="rule-row">
+
+            <div class="rule-info">
+                <span class="rule-id">
+                    CERT001
+                </span>
+
+                <span class="rule-count">
+                    1
+                </span>
+            </div>
+
+            <div class="progress-track">
+                <div
+                    class="progress-bar"
+                    style="width: 33.3%">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="rule-row">
+
+            <div class="rule-info">
+                <span class="rule-id">
+                    WMI001
+                </span>
+
+                <span class="rule-count">
+                    1
+                </span>
+            </div>
+
+            <div class="progress-track">
+                <div
+                    class="progress-bar"
+                    style="width: 33.3%">
+                </div>
+            </div>
+
+        </div>
+
+
+        </div>
+
+
+        <!-- MITRE -->
+
+        <div class="panel">
+
+            <div class="panel-title">
+
+                <h2>
+                    MITRE ATT&CK Coverage
+                </h2>
+
+                <span class="panel-tag">
+                    TECHNIQUES
+                </span>
+
+            </div>
+
+            <div class="mitre-grid">
+
+
+        <div class="mitre-item">
+
+            <span class="mitre-code">
+                T1059.001
+            </span>
+
+            <span class="mitre-count">
+                3
+            </span>
+
+        </div>
+
+        <div class="mitre-item">
+
+            <span class="mitre-code">
+                T1059.003
+            </span>
+
+            <span class="mitre-count">
+                3
+            </span>
+
+        </div>
+
+        <div class="mitre-item">
+
+            <span class="mitre-code">
+                T1218.005
+            </span>
+
+            <span class="mitre-count">
+                2
+            </span>
+
+        </div>
+
+        <div class="mitre-item">
+
+            <span class="mitre-code">
+                T1140
+            </span>
+
+            <span class="mitre-count">
+                1
+            </span>
+
+        </div>
+
+        <div class="mitre-item">
+
+            <span class="mitre-code">
+                T1047
+            </span>
+
+            <span class="mitre-count">
+                1
+            </span>
+
+        </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- Severity -->
+
+        <div class="panel">
+
+            <div class="panel-title">
+
+                <h2>
+                    Severity
+                </h2>
+
+                <span class="panel-tag">
+                    CLASSIFICATION
+                </span>
+
+            </div>
+
+            <div class="severity-list">
+
+
+    <div class="severity-item">
+        <span class="severity-label high-text">
+            HIGH
+        </span>
+
+        <span class="severity-number">
+            0
+        </span>
+    </div>
+
+    <div class="severity-item">
+        <span class="severity-label medium-text">
+            MEDIUM
+        </span>
+
+        <span class="severity-number">
+            10
+        </span>
+    </div>
+
+    <div class="severity-item">
+        <span class="severity-label low-text">
+            LOW
+        </span>
+
+        <span class="severity-number">
+            0
+        </span>
+    </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SECURITY ALERT FEED
+         ===================================================== -->
+
+    <section class="panel alert-panel">
+
+        <div class="alert-header">
+
+            <div class="panel-title">
+
+                <h2>
+                    Security Alert Feed
+                </h2>
+
+                <span class="panel-tag">
+                    10 EVENTS
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Timestamp
+                        </th>
+
+                        <th>
+                            Rule
+                        </th>
+
+                        <th>
+                            Detection
+                        </th>
+
+                        <th>
+                            Severity
+                        </th>
+
+                        <th>
+                            ATT&CK
+                        </th>
+
+                        <th>
+                            Process / User
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+        <tr>
+
+            <td class="time-cell">
+                2026-10-01T04:51:13.651852+00:00
+            </td>
+
+            <td>
+                <span class="rule-badge">
+                    MSHTA001
+                </span>
+            </td>
+
+            <td>
+
+                <div class="alert-name">
+                    Suspicious MSHTA Execution
+                </div>
+
+                <div class="command">
+                    &quot;C:\Windows\system32\mshta.exe&quot; C:\Users\kraton\Downloads\LOLBin-Detection-Engine\logs\final-test.hta
+                </div>
+
+            </td>
+
+            <td>
+
+                <span class="severity medium">
+                    ● MEDIUM
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="mitre-badge">
+                    T1218.005
+                </span>
+
+            </td>
+
+            <td>
+
+                <div class="process">
+                    C:\Windows\System32\mshta.exe
+                </div>
+
+                <div class="user">
+                    DESKTOP-SMF8OK0\kraton
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td class="time-cell">
+                2026-10-01T04:50:55.023453+00:00
+            </td>
+
+            <td>
+                <span class="rule-badge">
+                    CMD001
+                </span>
+            </td>
+
+            <td>
+
+                <div class="alert-name">
+                    CMD Launching PowerShell
+                </div>
+
+                <div class="command">
+                    &quot;C:\Windows\system32\cmd.exe&quot; /c powershell.exe -Command &quot;Write-Host &#x27;Final CMD Detection&#x27;&quot;
+                </div>
+
+            </td>
+
+            <td>
+
+                <span class="severity medium">
+                    ● MEDIUM
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="mitre-badge">
+                    T1059.003
+                </span>
+
+            </td>
+
+            <td>
+
+                <div class="process">
+                    C:\Windows\System32\cmd.exe
+                </div>
+
+                <div class="user">
+                    DESKTOP-SMF8OK0\kraton
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td class="time-cell">
+                2026-10-01T04:50:42.582198+00:00
+            </td>
+
+            <td>
+                <span class="rule-badge">
+                    WMI001
+                </span>
+            </td>
+
+            <td>
+
+                <div class="alert-name">
+                    Suspicious WMI Process Execution
+                </div>
+
+                <div class="command">
+                    &quot;C:\Windows\System32\Wbem\WMIC.exe&quot; process call create notepad.exe
+                </div>
+
+            </td>
+
+            <td>
+
+                <span class="severity medium">
+                    ● MEDIUM
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="mitre-badge">
+                    T1047
+                </span>
+
+            </td>
+
+            <td>
+
+                <div class="process">
+                    C:\Windows\System32\wbem\WMIC.exe
+                </div>
+
+                <div class="user">
+                    DESKTOP-SMF8OK0\kraton
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td class="time-cell">
+                2026-10-01T04:50:30.288344+00:00
+            </td>
+
+            <td>
+                <span class="rule-badge">
+                    CERT001
+                </span>
+            </td>
+
+            <td>
+
+                <div class="alert-name">
+                    Suspicious Certutil Decode Activity
+                </div>
+
+                <div class="command">
+                    &quot;C:\Windows\system32\certutil.exe&quot; -decode .\logs\encoded.txt .\logs\decoded.txt
+                </div>
+
+            </td>
+
+            <td>
+
+                <span class="severity medium">
+                    ● MEDIUM
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="mitre-badge">
+                    T1140
+                </span>
+
+            </td>
+
+            <td>
+
+                <div class="process">
+                    C:\Windows\System32\certutil.exe
+                </div>
+
+                <div class="user">
+                    DESKTOP-SMF8OK0\kraton
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td class="time-cell">
+                2026-10-01T04:50:03.656289+00:00
+            </td>
+
+            <td>
+                <span class="rule-badge">
+                    PS001
+                </span>
+            </td>
+
+            <td>
+
+                <div class="alert-name">
+                    PowerShell Encoded Command
+                </div>
+
+                <div class="command">
+                    &quot;C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -EncodedCommand VwByAGkAdABlAC0ASABvAHMAdAAgACcARgBpAG4AYQBsACAAUABTACAARABlAHQAZQBjAHQAaQBvAG4AJwA=
+                </div>
+
+            </td>
+
+            <td>
+
+                <span class="severity medium">
+                    ● MEDIUM
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="mitre-badge">
+                    T1059.001
+                </span>
+
+            </td>
+
+            <td>
+
+                <div class="process">
+                    C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+                </div>
+
+                <div class="user">
+                    DESKTOP-SMF8OK0\kraton
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td class="time-cell">
+                2026-10-01T04:49:51.340711+00:00
+            </td>
+
+            <td>
+                <span class="rule-badge">
+                    CMD001
+                </span>
+            </td>
+
+            <td>
+
+                <div class="alert-name">
+                    CMD Launching PowerShell
+                </div>
+
+                <div class="command">
+                    &quot;C:\Windows\system32\cmd.exe&quot; /c powershell.exe -Command &quot;Write-Host &#x27;CMD to PowerShell Test&#x27;&quot;
+                </div>
+
+            </td>
+
+            <td>
+
+                <span class="severity medium">
+                    ● MEDIUM
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="mitre-badge">
+                    T1059.003
+                </span>
+
+            </td>
+
+            <td>
+
+                <div class="process">
+                    C:\Windows\System32\cmd.exe
+                </div>
+
+                <div class="user">
+                    DESKTOP-SMF8OK0\kraton
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td class="time-cell">
+                2026-10-01T04:49:51.305439+00:00
+            </td>
+
+            <td>
+                <span class="rule-badge">
+                    CMD001
+                </span>
+            </td>
+
+            <td>
+
+                <div class="alert-name">
+                    CMD Launching PowerShell
+                </div>
+
+                <div class="command">
+                    &quot;C:\Windows\system32\cmd.exe&quot; /c powershell.exe -Command &quot;Write-Host &#x27;CMD to PowerShell Test&#x27;&quot;
+                </div>
+
+            </td>
+
+            <td>
+
+                <span class="severity medium">
+                    ● MEDIUM
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="mitre-badge">
+                    T1059.003
+                </span>
+
+            </td>
+
+            <td>
+
+                <div class="process">
+                    C:\Windows\System32\cmd.exe
+                </div>
+
+                <div class="user">
+                    DESKTOP-SMF8OK0\kraton
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td class="time-cell">
+                2026-10-01T04:49:51.259796+00:00
+            </td>
+
+            <td>
+                <span class="rule-badge">
+                    MSHTA001
+                </span>
+            </td>
+
+            <td>
+
+                <div class="alert-name">
+                    Suspicious MSHTA Execution
+                </div>
+
+                <div class="command">
+                    &quot;C:\Windows\system32\mshta.exe&quot; C:\Users\kraton\Downloads\LOLBin-Detection-Engine\logs\mshta-test.hta
+                </div>
+
+            </td>
+
+            <td>
+
+                <span class="severity medium">
+                    ● MEDIUM
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="mitre-badge">
+                    T1218.005
+                </span>
+
+            </td>
+
+            <td>
+
+                <div class="process">
+                    C:\Windows\System32\mshta.exe
+                </div>
+
+                <div class="user">
+                    DESKTOP-SMF8OK0\kraton
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td class="time-cell">
+                2026-10-01T04:49:51.213724+00:00
+            </td>
+
+            <td>
+                <span class="rule-badge">
+                    PS001
+                </span>
+            </td>
+
+            <td>
+
+                <div class="alert-name">
+                    PowerShell Encoded Command
+                </div>
+
+                <div class="command">
+                    &quot;C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -EncodedCommand VwByAGkAdABlAC0ASABvAHMAdAAgACcARABlAGQAdQBwAGwAaQBjAGEAdABpAG8AbgAgAFQAZQBzAHQAJwA=
+                </div>
+
+            </td>
+
+            <td>
+
+                <span class="severity medium">
+                    ● MEDIUM
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="mitre-badge">
+                    T1059.001
+                </span>
+
+            </td>
+
+            <td>
+
+                <div class="process">
+                    C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+                </div>
+
+                <div class="user">
+                    DESKTOP-SMF8OK0\kraton
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td class="time-cell">
+                2026-10-01T04:49:51.194190+00:00
+            </td>
+
+            <td>
+                <span class="rule-badge">
+                    PS001
+                </span>
+            </td>
+
+            <td>
+
+                <div class="alert-name">
+                    PowerShell Encoded Command
+                </div>
+
+                <div class="command">
+                    &quot;C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -EncodedCommand VwByAGkAdABlAC0ASABvAHMAdAAgACcARABlAGQAdQBwAGwAaQBjAGEAdABpAG8AbgAgAFQAZQBzAHQAJwA=
+                </div>
+
+            </td>
+
+            <td>
+
+                <span class="severity medium">
+                    ● MEDIUM
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="mitre-badge">
+                    T1059.001
+                </span>
+
+            </td>
+
+            <td>
+
+                <div class="process">
+                    C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+                </div>
+
+                <div class="user">
+                    DESKTOP-SMF8OK0\kraton
+                </div>
+
+            </td>
+
+        </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="footer">
+
+        <span>
+            LOLBin Detection Engine • SOC Monitoring
+        </span>
+
+        <span>
+            Generated 2026-10-01 10:48:58
+        </span>
+
+    </footer>
+
+</div>
+
+</body>
+
+</html>
