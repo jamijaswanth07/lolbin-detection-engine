@@ -2,9 +2,11 @@
 
 A Windows-based behavioral detection engine that monitors Sysmon process creation events, identifies suspicious Living-off-the-Land Binary (LOLBin) activity, maps detections to MITRE ATT&CK techniques, and presents security alerts through a SOC-style dashboard.
 
+---
+
 ## Overview
 
-Attackers can abuse legitimate Windows utilities to execute commands, download or decode content, and perform other actions without relying on traditional malware files.
+Attackers can abuse legitimate Windows utilities to execute commands, decode content, and perform other actions without relying on traditional malware files.
 
 This project focuses on detecting suspicious behavior associated with commonly abused Windows tools by analyzing process creation telemetry rather than relying on file signatures.
 
@@ -32,49 +34,52 @@ This project was developed as a SOC Analyst / Detection Engineering portfolio pr
 
 ## Architecture
 
+![LOLBin Detection Engine Architecture](docs/images/architecture.png)
+
+### Detection Workflow
+
 ```text
-                    Windows 10 VM
-                         |
-                         v
-                +------------------+
-                |      Sysmon      |
-                | Event ID 1       |
-                | Process Creation |
-                +--------+---------+
-                         |
-                         v
-                +------------------+
-                |    wevtutil.exe  |
-                | Event Collection |
-                +--------+---------+
-                         |
-                         v
-                +------------------+
-                |   collector.py   |
-                | Continuous Engine|
-                +--------+---------+
-                         |
-                         v
-                +------------------+
-                | Detection Rules  |
-                |   JSON Rules      |
-                +--------+---------+
-                         |
-                         v
-                +------------------+
-                |  Alert Engine    |
-                | MITRE Mapping    |
-                | Deduplication    |
-                +--------+---------+
-                         |
-              +----------+----------+
-              |                     |
-              v                     v
-      alerts/alerts.json     reports/dashboard.html
-                                    |
-                                    v
-                           SOC Dashboard
+Windows 10 VM
+      ↓
+    Sysmon
+      ↓
+Windows Event Log
+      ↓
+   wevtutil
+      ↓
+ collector.py
+      ↓
+Detection Rules
+      ↓
+ detector.py
+      ↓
+MITRE ATT&CK Mapping
+      ↓
+Security Alerts
+      ↓
+alerts.json
+      ↓
+SOC Dashboard
 ```
+
+---
+
+## SOC Dashboard
+
+The project includes a SOC-style dashboard for visualizing detected activity, MITRE ATT&CK coverage, severity, and security alerts.
+
+![SOC Dashboard](docs/images/soc-dashboard.png)
+
+The current demonstration dashboard contains:
+
+- 10 detection events
+- 5 triggered detection rules
+- 5 MITRE ATT&CK techniques
+- 10 medium-severity alerts
+- Detection activity by rule
+- MITRE ATT&CK coverage
+- Severity classification
+- Security alert feed
 
 ---
 
@@ -125,7 +130,7 @@ Detects PowerShell execution using the `-EncodedCommand` parameter.
 
 **MITRE ATT&CK:** `T1059.001 – PowerShell`
 
-The encoded command itself is treated as a behavioral indicator and does not automatically establish malicious intent.
+The encoded command is treated as a behavioral indicator requiring investigation and does not automatically establish malicious intent.
 
 ---
 
@@ -161,9 +166,9 @@ Detects `cmd.exe` launching PowerShell.
 
 **MITRE ATT&CK:** `T1059.003 – Windows Command Shell`
 
-The CMD rule was specifically tuned to avoid generating alerts for ordinary commands such as routine file-management operations.
+The CMD detection was tuned to reduce false positives from ordinary CMD activity.
 
-A benign command such as:
+For example, a benign command such as:
 
 ```text
 cmd.exe /c "echo Normal CMD Activity"
@@ -229,36 +234,6 @@ This provides useful context for SOC-style investigation and triage.
 
 ---
 
-## SOC Dashboard
-
-The project includes a dark SOC-style dashboard generated from the stored alert data.
-
-The dashboard provides:
-
-- Detection event count
-- Number of triggered rules
-- MITRE ATT&CK technique coverage
-- Medium severity alert count
-- Detection activity visualization
-- MITRE ATT&CK coverage cards
-- Severity distribution
-- Security alert feed
-- Process and command-line information
-
-Dashboard output:
-
-```text
-reports/dashboard.html
-```
-
-The dashboard is generated using:
-
-```powershell
-python dashboard.py
-```
-
----
-
 ## Project Structure
 
 ```text
@@ -271,18 +246,23 @@ LOLBin-Detection-Engine/
 ├── README.md
 ├── .gitignore
 │
-├── rules/
-│   ├── powershell.json
-│   ├── certutil.json
-│   ├── wmi.json
-│   ├── cmd.json
-│   └── mshta.json
-│
 ├── alerts/
 │   └── alerts.json
 │
-└── reports/
-    └── dashboard.html
+├── docs/
+│   └── images/
+│       ├── architecture.png
+│       └── soc-dashboard.png
+│
+├── reports/
+│   └── dashboard.html
+│
+└── rules/
+    ├── powershell.json
+    ├── certutil.json
+    ├── wmi.json
+    ├── cmd.json
+    └── mshta.json
 ```
 
 Local test logs and temporary files are excluded from Git using `.gitignore`.
@@ -298,6 +278,7 @@ Local test logs and temporary files are excluded from Git using `.gitignore`.
 - Sysmon
 - Administrator privileges for Sysmon installation
 - VS Code or another code editor
+- VMware or another isolated virtualization platform
 
 The project was developed and tested in a Windows 10 virtual machine using VMware.
 
@@ -313,13 +294,13 @@ Install Sysmon with the project configuration:
 .\Sysmon64.exe -accepteula -i .\sysmon-config.xml
 ```
 
-The project uses Sysmon Process Creation telemetry.
-
 After modifying the configuration, reload it with:
 
 ```powershell
 .\Sysmon64.exe -c .\sysmon-config.xml
 ```
+
+The project uses Sysmon Process Creation telemetry.
 
 ---
 
@@ -458,7 +439,7 @@ The project also tested rule tuning against normal CMD activity to reduce unnece
 
 ---
 
-# Current Demonstration Results
+# Demonstration Results
 
 The final demonstration dataset contains alerts generated from multiple controlled test executions.
 
@@ -480,6 +461,22 @@ The resulting alerts demonstrate that the engine can:
 - Distinguish repeated process creation events
 - Avoid duplicate alerts for the same event/rule combination
 - Present detections through a SOC-style interface
+
+---
+
+# MITRE ATT&CK Coverage
+
+Current mappings include:
+
+| Technique | Description |
+|---|---|
+| T1059.001 | PowerShell |
+| T1059.003 | Windows Command Shell |
+| T1047 | Windows Management Instrumentation |
+| T1140 | Deobfuscate/Decode Files or Information |
+| T1218.005 | Mshta |
+
+These mappings provide a standardized way to describe the behaviors detected by the engine.
 
 ---
 
@@ -530,22 +527,6 @@ Potential improvements include:
 
 ---
 
-# MITRE ATT&CK Coverage
-
-Current mappings include:
-
-| Technique | Description |
-|---|---|
-| T1059.001 | PowerShell |
-| T1059.003 | Windows Command Shell |
-| T1047 | Windows Management Instrumentation |
-| T1140 | Deobfuscate/Decode Files or Information |
-| T1218.005 | Mshta |
-
-These mappings provide a standardized way to describe the behaviors detected by the engine.
-
----
-
 # Project Status
 
 **Status: Functional Prototype**
@@ -565,6 +546,8 @@ Implemented:
 - [x] Detection testing
 - [x] CMD false-positive tuning
 - [x] GitHub repository
+- [x] Architecture documentation
+- [x] SOC dashboard documentation
 
 ---
 
@@ -575,5 +558,4 @@ Implemented:
 Cybersecurity | SOC | Detection Engineering | Threat Detection
 
 GitHub:
-
 https://github.com/jamijaswanth07
